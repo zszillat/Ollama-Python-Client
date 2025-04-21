@@ -53,22 +53,45 @@ class Ollama:
         self.model = model
         self.last_request = None
 
-    def send_prompt(self, prompt: str, options: Optional[Options] = None) -> str:
+    def send_prompt(
+        self,
+        prompt: str,
+        options: Optional[Options] = None,
+        file_paths: Optional[List[str]] = None
+    ) -> str:
         """
         Send a prompt to the Ollama API using the specified model and optional generation parameters.
 
         Parameters:
         - prompt (str): The text prompt to send
         - options (Options, optional): Generation parameters
+        - file_paths (List[str], optional): A list of text-based file paths whose contents will be prepended to the prompt
 
         Returns:
         - str: The generated response text only
 
         Also saves the full API JSON response to `self.last_request`.
+
+        Note: Only plain text files are supported. Do not include binary files.
         """
+        file_content = ""
+        if file_paths:
+            try:
+                contents = []
+                for path in file_paths:
+                    with open(path, 'r', encoding='utf-8') as f:
+                        contents.append(f.read())
+                file_content = ("Here are files included with this prompt:\n\n" +
+                                "\n\n".join(contents) +
+                                "\n\n--- End of file contents ---\n\n")
+            except Exception as e:
+                raise ValueError(f"Failed to read one or more files: {e}")
+
+        full_prompt = file_content + prompt
+
         payload = {
             "model": self.model,
-            "prompt": prompt
+            "prompt": full_prompt
         }
 
         if options:
