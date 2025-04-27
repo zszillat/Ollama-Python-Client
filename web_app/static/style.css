@@ -28,6 +28,11 @@ body {
     font-size: 1.2rem;
 }
 
+#sidebar li {
+    background-color: red;
+    width: 95%;
+}
+
 #chat-list {
     list-style: none;
     padding: 0;

@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <title>Local ChatGPT</title>
     <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
 </head>
 <body>
     <div id="container">
@@ -46,9 +48,10 @@
 
             <div id="chat">
                 {% for message in messages %}
-                    <div class="{{ message.role }}">
-                        <strong>{{ message.role.capitalize() }}:</strong> {{ message.content }}
-                    </div>
+                <div class="{{ message.role }}">
+                    <strong>{{ message.role.capitalize() }}:</strong> 
+                    <div class="message-content" data-content="{{ message.content | e }}"></div>
+                </div>                 
                 {% endfor %}
             </div>
 
@@ -62,6 +65,16 @@
     <script>
         const chatDiv = document.getElementById("chat");
         chatDiv.scrollTop = chatDiv.scrollHeight;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll(".message-content").forEach(div => {
+                const raw = div.getAttribute("data-content");
+                div.innerHTML = marked.parse(raw);
+            });
+
+            const chatDiv = document.getElementById("chat");
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+        });
     </script>
 </body>
 </html>
