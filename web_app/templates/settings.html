@@ -1,3 +1,4 @@
+<!-- settings.html (fixed) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,9 +10,13 @@
     <div id="container">
         <div id="sidebar">
             <h2>Chats</h2>
-            <ul id="chat-list">
+            <ul>
                 {% for conv in conversations %}
-                    <li><a href="/load_chat?filename={{ conv }}">{{ conv }}</a></li>
+                <li style="display: flex; align-items: center; justify-content: space-between;">
+                    <a href="/load_chat?filename={{ conv }}" style="text-decoration: none; color: inherit;">
+                        {{ conv }}
+                    </a>
+                </li>
                 {% endfor %}
             </ul>
             <form action="/new_chat" method="post">
@@ -55,7 +60,6 @@
         </div>
     </div>
 
-    <!-- Modal: Installed Models -->
     <div id="installedModelsModal" class="modal">
         <div class="modal-content">
             <span class="close" id="closeInstalledModels">&times;</span>
@@ -68,7 +72,6 @@
         </div>
     </div>
 
-    <!-- Modal: Model Presets -->
     <div id="modelPresetsModal" class="modal">
         <div class="modal-content">
             <span class="close" id="closeModelPresets">&times;</span>
@@ -77,7 +80,6 @@
         </div>
     </div>
 
-    <!-- Modal: Edit Preset -->
     <div id="editPresetModal" class="modal">
         <div class="modal-content">
             <span class="close" id="closeEditPreset">&times;</span>
@@ -88,7 +90,6 @@
     </div>
 
     <script>
-        // Pass settings data to frontend
         window.settingsData = {{ settings | tojson }};
     </script>
     <script src="/static/settings.js"></script>

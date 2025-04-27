@@ -1,3 +1,4 @@
+<!-- chat.html (fixed) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,11 +10,22 @@
     <div id="container">
         <div id="sidebar">
             <h2>Chats</h2>
-            <ul id="chat-list">
+            <ul>
                 {% for conv in conversations %}
-                    <li><a href="/load_chat?filename={{ conv }}">{{ conv }}</a></li>
+                <li style="display: flex; align-items: center; justify-content: space-between;">
+                    <a href="/load_chat?filename={{ conv }}" style="text-decoration: none; color: inherit;">
+                        {{ conv }}
+                    </a>
+                    <form action="/delete_chat" method="post" style="display:inline;">
+                        <input type="hidden" name="filename" value="{{ conv }}">
+                        <button type="submit" style="background:none; border:none; cursor:pointer;">
+                            🗑️
+                        </button>
+                    </form>
+                </li>
                 {% endfor %}
             </ul>
+            
             <form action="/new_chat" method="post">
                 <button type="submit" id="new-chat-button">New Chat</button>
             </form>
@@ -48,7 +60,6 @@
     </div>
 
     <script>
-        // Keep chat scrolled to bottom
         const chatDiv = document.getElementById("chat");
         chatDiv.scrollTop = chatDiv.scrollHeight;
     </script>
