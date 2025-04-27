@@ -1,0 +1,47 @@
+<div id="installedModelsModal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeInstalledModels">&times;</span>
+    <h2>Installed Models</h2>
+    <ul id="installed-models-list"></ul>
+    <div style="margin-top: 1rem;">
+      <input type="text" id="new-installed-model" placeholder="Add new model...">
+      <button type="button" id="add-installed-model" style="margin-top: 0.5rem;">Add Model</button>
+    </div>
+  </div>
+</div>
+
+<div id="modelPresetsModal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeModelPresets">&times;</span>
+    <h2>Model Presets</h2>
+    <ul id="model-presets-list"></ul>
+  </div>
+</div>
+
+<!-- Plus your full working EditPresetModal with the script (already in canvas) -->
+
+<div id="editPresetModal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeEditPreset">&times;</span>
+    <h2>Edit Model Preset</h2>
+
+    <div class="form-group">
+      <label for="preset-name">Preset Name:</label>
+      <input type="text" id="preset-name" placeholder="Enter preset name">
+    </div>
+
+    <div class="form-group">
+      <label for="preset-model">Model:</label>
+      <input type="text" id="preset-model" placeholder="Enter model name">
+    </div>
+
+    <button type="button" id="toggle-advanced-fields" style="margin-bottom: 1rem;">Show Advanced</button>
+
+    <div id="advanced-fields" class="form-group" style="display: none;">
+      <!-- Advanced fields get inserted here dynamically -->
+    </div>
+
+    <button type="button" id="save-preset-changes" style="margin-top: 1rem;">Save Changes</button>
+  </div>
+</div>
+

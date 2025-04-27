@@ -2,13 +2,18 @@
     "base_url": "http://10.0.0.1:11434",
     "manageModels": {
         "modelInstalled": [
-            "qwen2.5-coder:1.5b",
-            "test"
+            "qwen2.5-coder:1.5b"
         ],
         "modelPresets": [
             {
                 "model": "qwen2.5-coder:1.5b",
-                "name": "Default"
+                "name": "default",
+                "options": {
+                    "temperature": 1.2,
+                    "top_p": 3.3,
+                    "top_k": 23,
+                    "repeat_penalty": 22
+                }
             }
         ]
     },
