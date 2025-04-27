@@ -1,0 +1,211 @@
+/* Base Reset */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #212121;
+    color: #ffffff;
+    height: 100vh;
+    display: flex;
+}
+
+#container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+}
+
+/* Sidebar */
+#sidebar {
+    width: 250px;
+    background-color: #171717;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+#sidebar h2 {
+    margin-top: 0;
+    font-size: 1.2rem;
+}
+
+#chat-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 1rem;
+}
+
+#chat-list li {
+    margin: 0.5rem 0;
+}
+
+#chat-list a {
+    text-decoration: none;
+    color: #AFAFA3;
+}
+
+#new-chat-button,
+#settings-button {
+    background-color: #303030;
+    color: #AFAFA3;
+    border: none;
+    padding: 0.5rem;
+    margin-top: 1rem;
+    cursor: pointer;
+}
+
+/* Main Content */
+#main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #212121;
+}
+
+#top-bar {
+    background-color: #212121;
+    padding: 1rem;
+    border-bottom: 1px solid #333;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#top-bar h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+#chat {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
+}
+
+/* Forms */
+#chat-form,
+#settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+#chat-form input[type="text"],
+#settings-form input[type="text"],
+#settings-form select {
+    background-color: #303030;
+    border: none;
+    color: #AFAFA3;
+    padding: 0.5rem;
+    width: 100%;
+}
+
+#chat-form button,
+#settings-form button {
+    background-color: #303030;
+    color: #AFAFA3;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    width: fit-content;
+}
+
+/* Message Bubbles */
+.user {
+    text-align: right;
+    margin-bottom: 0.5rem;
+}
+
+.assistant {
+    text-align: left;
+    margin-bottom: 0.5rem;
+}
+
+/* Modals */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content {
+    background-color: #171717;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #555;
+    width: 50%;
+    color: #AFAFA3;
+    border-radius: 8px;
+    position: relative;
+    max-height: 95vh;
+    overflow: hidden;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+}
+
+.close {
+    color: #aaa;
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: white;
+}
+
+/* Scrollable Modal Lists */
+ul#installed-models-list,
+ul#model-presets-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 1rem;
+    overflow-y: auto;
+    max-height: 300px;
+    padding-right: 10px;
+}
+
+ul#installed-models-list li,
+ul#model-presets-list li {
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+ul#installed-models-list button,
+ul#model-presets-list button {
+    margin-left: 10px;
+}
+
+/* Modal Inputs */
+.modal input[type="text"],
+.modal textarea {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 1rem;
+    background-color: #303030;
+    border: none;
+    color: #AFAFA3;
+}
+
+.modal button {
+    background-color: #303030;
+    color: #AFAFA3;
+    border: none;
+    padding: 0.5rem 1rem;
+    margin-top: 1rem;
+    cursor: pointer;
+}

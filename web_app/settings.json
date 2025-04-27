@@ -1,0 +1,31 @@
+{
+    "base_url": "http://10.0.0.1:11434",
+    "theme": {
+      "selected": "Dark",
+      "themes": [
+        "Light",
+        "Dark"
+      ]
+    },
+    "manageModels": {
+      "modelInstalled": [
+        "tinyllama:latest"
+      ],
+      "modelPresets": [
+        {
+          "model": "tinyllama:latest",
+          "name": "Coder",
+          "system": "Please assume you are programming in python using the django framework"
+        },
+        {
+          "model": "tinyllama:latest",
+          "name": "Spongebob",
+          "options": {
+            "temperature": 1.05
+          },
+          "system": "You are roleplaying as Spongebob from Spongebob Squarepants"
+        }
+      ]
+    }
+  }
+  

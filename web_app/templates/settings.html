@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Settings - Local ChatGPT</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div id="container">
+        <div id="sidebar">
+            <h2>Chats</h2>
+            <ul id="chat-list">
+                {% for conv in conversations %}
+                    <li><a href="/load_chat?filename={{ conv }}">{{ conv }}</a></li>
+                {% endfor %}
+            </ul>
+            <form action="/new_chat" method="post">
+                <button type="submit" id="new-chat-button">New Chat</button>
+            </form>
+            <form action="/settings" method="get" style="margin-top: auto;">
+                <button type="submit" id="settings-button">Settings</button>
+            </form>
+        </div>
+
+        <div id="main">
+            <div id="top-bar">
+                <h2>Settings</h2>
+            </div>
+
+            <div id="chat">
+                <form id="settings-form">
+                    <div class="form-group">
+                        <label for="theme">Theme:</label>
+                        <select id="theme" name="theme"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="base-url">Base URL:</label>
+                        <input type="text" id="base-url" name="base-url" placeholder="Enter base URL">
+                    </div>
+
+                    <h2 style="margin-top:2rem;">Manage Models</h2>
+
+                    <div class="form-group">
+                        <button type="button" id="manage-installed-models">Manage Installed Models</button>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="button" id="manage-model-presets">Manage Model Presets</button>
+                    </div>
+
+                    <button type="submit" style="margin-top: 2rem;">Save Settings</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Installed Models -->
+    <div id="installedModelsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeInstalledModels">&times;</span>
+            <h2>Installed Models</h2>
+            <ul id="installed-models-list"></ul>
+            <div style="margin-top: 1rem;">
+                <input type="text" id="new-installed-model" placeholder="Add new model...">
+                <button type="button" id="add-installed-model" style="margin-top: 0.5rem;">Add Model</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Model Presets -->
+    <div id="modelPresetsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModelPresets">&times;</span>
+            <h2>Model Presets</h2>
+            <ul id="model-presets-list"></ul>
+        </div>
+    </div>
+
+    <!-- Modal: Edit Preset -->
+    <div id="editPresetModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeEditPreset">&times;</span>
+            <h2>Edit Model Preset</h2>
+            <textarea id="edit-preset-json" style="width: 100%; height: 300px;"></textarea>
+            <button type="button" id="save-preset-changes" style="margin-top: 1rem;">Save Changes</button>
+        </div>
+    </div>
+
+    <script>
+        // Pass settings data to frontend
+        window.settingsData = {{ settings | tojson }};
+    </script>
+    <script src="/static/settings.js"></script>
+</body>
+</html>
