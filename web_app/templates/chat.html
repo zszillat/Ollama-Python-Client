@@ -7,9 +7,9 @@
 
 <!-- TOPBAR -->
 {% block topbar %}
-    <div id="open" class="custom-dropdown-container">
+    <!-- <div id="open" class="custom-dropdown-container">
         <div id="selectBox">
-            <p id="openSelect">Select</p>
+            <p id="openSelect">{{ default_preset }}</p>
         </div>
         <div id="optionBox">
             <div class="buffer"></div>
@@ -24,14 +24,21 @@
     </div>
     <div id="closed" class="custom-dropdown-container">
         <div id="selectBox">
-            <p id="closedSelect">Select</p>
+            <p id="closedSelect">{{ default_preset }}</p>
         </div>
-    </div>
+    </div> -->
     <select id="presetSelect" name="preset">
         {% for preset in presets %}
-            <option value="{{ preset.name }}">{{ preset.name }}</option>
+          <option 
+            value="{{ preset.name }}" 
+            {% if preset.name == default_preset %}selected{% endif %}
+          >
+            {{ preset.name }}
+          </option>
         {% endfor %}
-    </select>
+      </select>
+      
+      
 {% endblock %}
 
 

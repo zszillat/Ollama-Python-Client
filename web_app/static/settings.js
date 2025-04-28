@@ -20,13 +20,12 @@ document.addEventListener("DOMContentLoaded", function() {
         themeSelect.appendChild(option);
     });
 
-    console.log(settings.manageModels.modelPresets)
-
     settings.manageModels.modelPresets.forEach(t => {
       const option = document.createElement('option');
       option.value = t.name;
       option.text = t.name;
-      if (t === settings.presetDefault) {
+      if (t.name === settings.presetDefault) {
+        //console.log(t)
         option.selected = true;
       }
       presetSelect.appendChild(option);
@@ -193,7 +192,6 @@ function fillAdvancedFields(options) {
 }
 
 function createAdvancedFields() {
-  console.log("Debug")
     const container = document.getElementById('advanced-fields');
     if (!container) return;
 

@@ -16,10 +16,10 @@
                 "model": "llama3.1:8b",
                 "name": "coder",
                 "options": {
+                    "repeat_penalty": 22,
                     "temperature": 1.2,
-                    "top_p": 3.3,
                     "top_k": 23,
-                    "repeat_penalty": 22
+                    "top_p": 3.3
                 }
             }
         ]

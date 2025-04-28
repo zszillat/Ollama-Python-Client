@@ -24,6 +24,7 @@ title_prompt = (
 )
 
 # Config - Load from settings.json
+
 settings_data = {}
 with open(settings_file, 'r') as f:
     settings_data = json.load(f)
@@ -31,6 +32,7 @@ with open(settings_file, 'r') as f:
 # Config
 BASE_URL = settings_data.get('base_url', 'http://10.0.0.1:11434')
 DEFAULT_MODEL = settings_data.get('manageModels', {}).get('modelInstalled', ['qwen2.5-coder:1.5b'])[0]
+DEFAULT_PRESET = settings_data.get('presetDefault')
 
 def get_installed_models(base_url):
     try:
@@ -52,10 +54,16 @@ app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 # Chat Manager
 class ChatManager:
-    def __init__(self, base_url: str, model: str):
+    def __init__(self, base_url: str, model: str, preset: str):
         self.base_url = base_url
         self.model = model
+        self.preset = preset
         self.reset()
+
+    def refresh_settings(self):
+        with open(settings_file, 'r') as f:
+            self.settings_data = json.load(f)
+        return self.settings_data
 
     def reset(self, file_path: str = None):
         if file_path and os.path.exists(file_path):
@@ -66,13 +74,15 @@ class ChatManager:
             self.conversation_file = os.path.join(conversations_dir, "chat_001.json")
 
     def new_chat(self):
+        self.refresh_settings()
         conversations = list_conversations()
         new_number = len(conversations) + 1
         filename = f"chat_{new_number:03d}.json"
         self.client = Ollama(self.base_url, model=self.model)
-        self.conversation_file = os.path.join(conversations_dir, filename)
+        self.conversation_file = os.path.join(conversations_dir, filename)    
+        self.preset = settings
 
-chat_manager = ChatManager(BASE_URL, DEFAULT_MODEL)
+chat_manager = ChatManager(BASE_URL, DEFAULT_MODEL, DEFAULT_PRESET)
 
 # Utilities
 def list_conversations():
@@ -103,6 +113,7 @@ async def read_root(request: Request):
             "request": request,
             "messages": chat_manager.client.history,
             "conversations": formatted_conversations,
+            "default_preset": chat_manager.preset,
             "presets": presets,
         },
     )
@@ -146,11 +157,11 @@ async def chat(request: Request, user_input: str = Form(...)):
             os.remove(chat_manager.conversation_file)
         chat_manager.conversation_file = new_file_path
 
-    conversations = list_conversations()
-    formatted_conversations = [os.path.splitext(name)[0].replace("_", " ") for name in conversations]
-    settings_data = load_settings()
-    presets = settings_data.get('manageModels', {}).get('modelPresets', [])
-    return templates.TemplateResponse(
+        conversations = list_conversations()
+        formatted_conversations = [os.path.splitext(name)[0].replace("_", " ") for name in conversations]
+        settings_data = load_settings()
+        presets = settings_data.get('manageModels', {}).get('modelPresets', [])
+        return templates.TemplateResponse(
         "chat.html",
         {
             "request": request,
