@@ -1,9 +1,6 @@
 {
     "base_url": "http://10.0.0.1:11434",
     "manageModels": {
-        "modelInstalled": [
-            "qwen2.5-coder:latest"
-        ],
         "modelPresets": [
             {
                 "model": "deepseek-coder-v2:16b",
@@ -16,17 +13,18 @@
                 }
             },
             {
-                "model": "qwen2.5-coder:16b",
+                "model": "llama3.1:8b",
                 "name": "coder",
                 "options": {
-                    "repeat_penalty": 22,
                     "temperature": 1.2,
+                    "top_p": 3.3,
                     "top_k": 23,
-                    "top_p": 3.3
+                    "repeat_penalty": 22
                 }
             }
         ]
     },
+    "presetDefault": "default",
     "theme": {
         "selected": "Dark",
         "themes": [

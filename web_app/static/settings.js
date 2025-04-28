@@ -9,6 +9,7 @@ const editPresetModal = document.getElementById('editPresetModal');
 
 document.addEventListener("DOMContentLoaded", function() {
     const themeSelect = document.getElementById('theme');
+    const presetSelect = document.getElementById('presets');
     const baseUrlInput = document.getElementById('base-url');
 
     settings.theme.themes.forEach(t => {
@@ -19,6 +20,18 @@ document.addEventListener("DOMContentLoaded", function() {
         themeSelect.appendChild(option);
     });
 
+    console.log(settings.manageModels.modelPresets)
+
+    settings.manageModels.modelPresets.forEach(t => {
+      const option = document.createElement('option');
+      option.value = t.name;
+      option.text = t.name;
+      if (t === settings.presetDefault) {
+        option.selected = true;
+      }
+      presetSelect.appendChild(option);
+    });
+
     baseUrlInput.value = settings.base_url;
 
     refreshModelPresets();
@@ -26,6 +39,11 @@ document.addEventListener("DOMContentLoaded", function() {
     themeSelect.addEventListener('change', () => {
         settings.theme.selected = themeSelect.value;
         saveSettings();
+    });
+
+    presetSelect.addEventListener('change', () => {
+      settings.presetDefault = presetSelect.value;
+      saveSettings();
     });
 
     baseUrlInput.addEventListener('blur', () => {
@@ -43,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (savePresetChangesBtn) {
         savePresetChangesBtn.addEventListener('click', function() {
+
             if (editingPresetIndex !== null) {
                 const newPreset = {
                     model: document.getElementById('preset-model')?.value || "",
@@ -174,6 +193,7 @@ function fillAdvancedFields(options) {
 }
 
 function createAdvancedFields() {
+  console.log("Debug")
     const container = document.getElementById('advanced-fields');
     if (!container) return;
 
