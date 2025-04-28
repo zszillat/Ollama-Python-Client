@@ -1,4 +1,4 @@
-# app.py (fixed)
+# app.py
 from fastapi import FastAPI, Request, Form, Query, Body, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -6,14 +6,9 @@ from fastapi.staticfiles import StaticFiles
 import os
 import glob
 import json
+import requests
 
 from ollama_client import Options, Ollama
-
-# Config
-BASE_URL = "http://10.0.0.1:11434"
-DEFAULT_MODEL = "qwen2.5-coder:1.5b"
-
-app = FastAPI()
 
 # Paths
 current_dir = os.path.dirname(__file__)
@@ -22,11 +17,32 @@ static_dir = os.path.join(current_dir, "static")
 conversations_dir = os.path.join(current_dir, "conversations")
 settings_file = os.path.join(current_dir, "settings.json")
 title_prompt = (
-    f"based on the conversation so far, what would be a good title for it?" 
-    f" Respond with a conversation title only;"
-    f" use _ in place of a space;"
-    f" keep the title under 10 words"
+    "based on the conversation so far, what would be a good title for it?"
+    " Respond with a conversation title only;"
+    " use _ in place of a space;"
+    " keep the title under 10 words"
 )
+
+# Config - Load from settings.json
+settings_data = {}
+with open(settings_file, 'r') as f:
+    settings_data = json.load(f)
+
+# Config
+BASE_URL = settings_data.get('base_url', 'http://10.0.0.1:11434')
+DEFAULT_MODEL = settings_data.get('manageModels', {}).get('modelInstalled', ['qwen2.5-coder:1.5b'])[0]
+
+def get_installed_models(base_url):
+    try:
+        response = requests.get(f"{base_url}/api/tags")
+        response.raise_for_status()
+        tags = response.json()
+        return [model['name'] for model in tags.get('models', [])]
+    except Exception as e:
+        print(f"Failed to fetch models: {e}")
+        return []
+
+app = FastAPI()
 
 deleted_dir = os.path.join(current_dir, "deleted")
 os.makedirs(deleted_dir, exist_ok=True)
@@ -79,11 +95,17 @@ async def save_settings(new_settings: dict = Body(...)):
 async def read_root(request: Request):
     raw_conversations = list_conversations()
     formatted_conversations = [os.path.splitext(name)[0].replace("_", " ") for name in raw_conversations]
-    return templates.TemplateResponse("chat.html", {
-        "request": request,
-        "messages": chat_manager.client.history,
-        "conversations": formatted_conversations
-    })
+    settings_data = load_settings()
+    presets = settings_data.get('manageModels', {}).get('modelPresets', [])
+    return templates.TemplateResponse(
+        "chat.html",
+        {
+            "request": request,
+            "messages": chat_manager.client.history,
+            "conversations": formatted_conversations,
+            "presets": presets,
+        },
+    )
 
 @app.post("/delete_chat")
 async def delete_chat(filename: str = Form(...)):
@@ -93,20 +115,16 @@ async def delete_chat(filename: str = Form(...)):
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="Conversation not found")
 
-    # Check if the deleted file is the currently active chat
     currently_loaded_file = os.path.basename(chat_manager.conversation_file)
-    deleting_current_chat = (safe_filename == currently_loaded_file)
+    deleting_current_chat = safe_filename == currently_loaded_file
 
-    # Move file to deleted folder
     deleted_path = os.path.join(deleted_dir, safe_filename)
     os.rename(file_path, deleted_path)
 
-    # If deleting the active chat, reset
     if deleting_current_chat:
         chat_manager.new_chat()
         return RedirectResponse(url="/", status_code=303)
 
-    # Otherwise just refresh to home
     return RedirectResponse(url="/", status_code=303)
 
 @app.post("/chat", response_class=HTMLResponse)
@@ -117,7 +135,9 @@ async def chat(request: Request, user_input: str = Form(...)):
     filename = os.path.basename(chat_manager.conversation_file)
     if filename.startswith("chat_"):
         title_response = chat_manager.client.send_prompt(title_prompt)
-        clean_title = "".join(c for c in title_response.strip() if c.isalnum() or c in (' ', '_', '-')).strip().replace(" ", "_")
+        clean_title = "".join(
+            c for c in title_response.strip() if c.isalnum() or c in (" ", "_", "-")
+        ).strip().replace(" ", "_")
         new_filename = f"{clean_title}.json"
         new_file_path = os.path.join(os.path.dirname(chat_manager.conversation_file), new_filename)
         chat_manager.client.history = chat_manager.client.history[:-2]
@@ -128,12 +148,17 @@ async def chat(request: Request, user_input: str = Form(...)):
 
     conversations = list_conversations()
     formatted_conversations = [os.path.splitext(name)[0].replace("_", " ") for name in conversations]
-
-    return templates.TemplateResponse("chat.html", {
-        "request": request,
-        "messages": chat_manager.client.history,
-        "conversations": formatted_conversations
-    })
+    settings_data = load_settings()
+    presets = settings_data.get('manageModels', {}).get('modelPresets', [])
+    return templates.TemplateResponse(
+        "chat.html",
+        {
+            "request": request,
+            "messages": chat_manager.client.history,
+            "conversations": formatted_conversations,
+            "presets": presets,
+        },
+    )
 
 @app.post("/new_chat", response_class=RedirectResponse)
 async def new_chat():
@@ -156,8 +181,13 @@ async def settings(request: Request):
     raw_conversations = list_conversations()
     formatted_conversations = [os.path.splitext(name)[0].replace("_", " ") for name in raw_conversations]
     settings_data = load_settings()
-    return templates.TemplateResponse("settings.html", {
-        "request": request,
-        "conversations": formatted_conversations,
-        "settings": settings_data
-    })
+    installed_models = get_installed_models(settings_data.get('base_url', 'http://10.0.0.1:11434'))
+    return templates.TemplateResponse(
+        "settings.html",
+        {
+            "request": request,
+            "conversations": formatted_conversations,
+            "settings": settings_data,
+            "installed_models": installed_models,
+        },
+    )

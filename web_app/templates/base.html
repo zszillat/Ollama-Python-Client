@@ -48,9 +48,12 @@
 
         <div id="main">
             <div id="top-bar">
-                <button id="toggle-sidebar">
-                    <img src="/static/menu.svg" alt="Menu">
-                </button>
+                <div class="toggle-sidebar-wrapper">
+                    <button id="toggle-sidebar">
+                        <img src="/static/menu.svg" alt="Menu">
+                    </button>
+                </div>
+
                 {% block topbar %}
                 {% endblock %}
             </div>

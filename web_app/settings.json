@@ -2,17 +2,27 @@
     "base_url": "http://10.0.0.1:11434",
     "manageModels": {
         "modelInstalled": [
-            "qwen2.5-coder:1.5b"
+            "qwen2.5-coder:latest"
         ],
         "modelPresets": [
             {
-                "model": "qwen2.5-coder:1.5b",
+                "model": "deepseek-coder-v2:16b",
                 "name": "default",
                 "options": {
+                    "repeat_penalty": 22,
                     "temperature": 1.2,
-                    "top_p": 3.3,
                     "top_k": 23,
-                    "repeat_penalty": 22
+                    "top_p": 3.3
+                }
+            },
+            {
+                "model": "qwen2.5-coder:16b",
+                "name": "coder",
+                "options": {
+                    "repeat_penalty": 22,
+                    "temperature": 1.2,
+                    "top_k": 23,
+                    "top_p": 3.3
                 }
             }
         ]

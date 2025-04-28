@@ -1,20 +1,43 @@
 {% extends "base.html" %}
 
-{% block title %}Chat - Local ChatGPT{% endblock %}
+{% block title %}{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="static/chat.css">
+{% endblock %}
 
 <!-- TOPBAR -->
 {% block topbar %}
-    <label for="model-select">Model:</label>
-    <select id="model-select">
-        <option>qwen2.5-coder:1.5b</option>
-        <option>deepseek-coder-v2:16b</option>
-        <option>llama3:latest</option>
+    <div id="open" class="custom-dropdown-container">
+        <div id="selectBox">
+            <p id="openSelect">Select</p>
+        </div>
+        <div id="optionBox">
+            <div class="buffer"></div>
+            {% for preset in presets %}
+            <p>{{ preset.name }}</p>
+            {% endfor %}
+            <p>test</p>
+            <p>test but kinda longer</p>
+            <p>test</p>
+            <div class="buffer"></div>
+        </div>
+    </div>
+    <div id="closed" class="custom-dropdown-container">
+        <div id="selectBox">
+            <p id="closedSelect">Select</p>
+        </div>
+    </div>
+    <select id="presetSelect" name="preset">
+        {% for preset in presets %}
+            <option value="{{ preset.name }}">{{ preset.name }}</option>
+        {% endfor %}
     </select>
 {% endblock %}
 
+
+
 <!-- MAIN -->
 {% block content %}
-
 
     <div id="chat">
         {% for message in messages %}
@@ -43,6 +66,37 @@
         });
 
         Prism.highlightAll();
+
+        // dropdown logic
+        const presetSelect = document.getElementById('presetSelect')
+        const open = document.getElementById('open')
+        const openSelect = document.getElementById('openSelect')
+        const closed = document.getElementById('closed')
+        const closedSelect = document.getElementById('closedSelect')
+        const optionBox = document.getElementById('optionBox');
+        const pNodeList = optionBox.querySelectorAll(':scope > p');
+        const pArray = Array.from(pNodeList);
+
+        closedSelect.addEventListener('click', () => {
+            closed.style.display = "none";
+            open.style.display = "flex";
+        })
+
+        openSelect.addEventListener('click', () => {
+            open.style.display = "none";
+            closed.style.display = "flex";
+        })
+
+        pArray.forEach((p, idx) => {
+            p.addEventListener('click', () => {
+                presetSelect.value = p.textContent
+                openSelect.textContent = p.textContent
+                closedSelect.textContent = p.textContent
+                open.style.display = "none"
+                closed.style.display = "flex"
+            });
+        });
+
     });
 </script>
 {% endblock %}

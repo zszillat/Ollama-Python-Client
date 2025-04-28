@@ -6,34 +6,28 @@
 {% endblock %}
 
 {% block content %}
-    <div id="settings-body">
-        <form id="settings-form">
-            <div class="form-group">
-                <label for="theme">Theme:</label>
-                <select id="theme" name="theme"></select>
-            </div>
+<div id="settings-body">
+    <form id="settings-form">
+        <div class="form-group">
+            <label for="theme">Theme:</label>
+            <select id="theme" name="theme"></select>
+        </div>
 
-            <div class="form-group">
-                <label for="base-url">Base URL:</label>
-                <input type="text" id="base-url" name="base-url" placeholder="Enter base URL">
-            </div>
+        <div class="form-group">
+            <label for="base-url">Base URL:</label>
+            <input type="text" id="base-url" name="base-url" placeholder="Enter base URL">
+        </div>
 
-            <h2>Manage Models</h2>
+        <h2>Manage Model Presets</h2>
+        <div id="model-presets-container">
+            <ul id="model-presets-list"></ul>
+        </div>
 
-            <div class="form-group">
-                <button type="button" id="manage-installed-models">Manage Installed Models</button>
-            </div>
+        <button type="submit" style="margin-top: 2rem;">Save Settings</button>
+    </form>
+</div>
 
-            <div class="form-group">
-                <button type="button" id="manage-model-presets">Manage Model Presets</button>
-            </div>
-
-            <button type="submit" style="margin-top: 2rem;">Save Settings</button>
-        </form>
-    </div>
-
-    <!-- Modals (Installed Models, Presets, Edit Preset) -->
-    {% include "modals.html" %}
+{% include "modals.html" %}
 {% endblock %}
 
 {% block scripts %}
